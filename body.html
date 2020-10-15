@@ -2,6 +2,21 @@
 <html>
 <head>
 <style>
+h1 {
+text-align: center;
+}
+#myInput {
+  background-image: url('img.png');
+  background-size: 30px 30px;
+  background-position: 9px 6px;
+  background-repeat: no-repeat;
+  width: 60%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
@@ -9,11 +24,14 @@ table, th, td {
   padding: 5px;
 
 }
+
 </style>
 </head>
 <body>
 
 <h1>Campaign listing page</h1>
+<input type="search" id="myInput" onkeyup="searchFunction()" placeholder="Search for names.." >
+
 <table id="dataTbl" width=100%>
   <tr>
     <!--<th><input type="checkbox" name="delall"></th>-->
@@ -40,12 +58,27 @@ table, th, td {
 
 <script type="text/javascript">
  
-document.getElementById('delall').onclick = function() {
-  var checkboxes = document.getElementsByName('delBox');
-  for (var checkbox of checkboxes) {
-    checkbox.checked = this.checked;
-  }
-} 
+function searchFunction(){
+    var input, filter, found, table, tr, td, i, j;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("dataTbl");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        for (j = 0; j < td.length; j++) {
+            if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                found = true;
+            }
+        }
+        if (found) {
+            tr[i].style.display = "";
+            found = false;
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
 function deleteRows(){
 
 	isTable = document.getElementById('dataTbl');
@@ -54,18 +87,7 @@ function deleteRows(){
 		{if (nBoxes[i].checked == true){isTable.deleteRow(i)}}
 }
 
-    function ValidatePetSelection()  
-    {  
-        var checkboxes = document.getElementsByName("favorite_pet");  
-        var numberOfCheckedItems = 0;  
-        for(var i = 0; i < checkboxes.length; i++)  
-        {  
-            if(checkboxes[i].checked)  
-                numberOfCheckedItems++;  
-        }  
-		console.log(numberOfCheckedItems);
-        
-    }  
+     
     </script>
 <input type=button value="Delete Rows" onclick="deleteRows()">
 </body>
