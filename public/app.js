@@ -1,21 +1,32 @@
 
+ displayjson();
  var pager = new Pager('dataTbl', 5);
 pager.init();
 pager.showPageNav('pager', 'pageNavPosition');
 pager.showPage(1);
-var fs = require('data.json');
+ 
+ function displayjson()
+ {
+	
+	 let url="http://localhost:1234/data.json";
+	 
+	fetch(url)
+	.then(response => response.json())
+	.then(data => {
+		   
+		for (var i = 1; i < 4; i++){
+			//const cell=
+			const tdname=document.getElementById('name');
+			const tdtype=document.getElementById('type');
+			const tdcompany=document.getElementById('company');
+			tdname.innerHTML+=data[i].name;
+			tdcompany.innerHTML+=data[i].company;
+			tdtype.innerHTML+=data[i].type;
+			//console.log(tdname);
+		}
 
-//reading file "quotes.json" using readFileSync function
-
-var data = fs.readFileSync("data.json", "utf8");
-
-//parsing data read to json format
-
-var data1 = JSON.parse(data);
-
-//printing complete data1
-
-console.log(data1);
+	});  
+ }
 
  function Pager(tableName, itemsPerPage) {
 	this.tableName = tableName;
