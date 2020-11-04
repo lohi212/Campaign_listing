@@ -1,10 +1,8 @@
-
- displayjson();
- var pager = new Pager('dataTbl', 5);
+displayjson();
+ var pager = new Pager('dataTbl', 1);
 pager.init();
 pager.showPageNav('pager', 'pageNavPosition');
 pager.showPage(1);
- 
  function displayjson()
  {
 	
@@ -13,21 +11,24 @@ pager.showPage(1);
 	fetch(url)
 	.then(response => response.json())
 	.then(data => {
+		var tablecontents = "";
+		
+		for (var i = 0; i < 5; i ++)
+			{
+			console.log(data[i].name);
+			tablecontents += " <tr> <td><input type=checkbox name='delBox'></td>";
+			tablecontents += "<td>" + data[i].name + "</td>";
+			tablecontents += "<td>" + data[i].company + "</td>";
+			tablecontents += "<td>" + data[i].type + "</td>";
+			tablecontents += "</tr>";
+			}
+			console.log(tablecontents);
+		//tablecontents += "</table>";
+     document.getElementById("tablespace").innerHTML = tablecontents;
 		   
-		for (var i = 1; i < 4; i++){
-			//const cell=
-			const tdname=document.getElementById('name');
-			const tdtype=document.getElementById('type');
-			const tdcompany=document.getElementById('company');
-			tdname.innerHTML+=data[i].name;
-			tdcompany.innerHTML+=data[i].company;
-			tdtype.innerHTML+=data[i].type;
-			//console.log(tdname);
-		}
-
+		
 	});  
  }
-
  function Pager(tableName, itemsPerPage) {
 	this.tableName = tableName;
 	this.itemsPerPage = itemsPerPage;
