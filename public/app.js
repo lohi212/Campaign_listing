@@ -1,4 +1,5 @@
-displayjson();
+//displayjson();
+displayTable()
  var pager = new Pager('dataTbl', 1);
 pager.init();
 pager.showPageNav('pager', 'pageNavPosition');
@@ -29,7 +30,42 @@ pager.showPage(1);
 		
 	});  
  }*/
- 
+ function displayTable() {
+	var arrHead = new Array();
+    arrHead = ['ID', 'Campaign Name', 'Type', 'Company'];
+
+	const tableElement = document.createElement('table');
+	tableElement.setAttribute('id', 'table-element');
+	const headerRow = tableElement.insertRow(-1);
+
+	arrHead.forEach(head => {
+		const headerCell = document.createElement('th');
+		headerCell.innerHTML = head;
+		headerRow.appendChild(headerCell);
+		tableElement.appendChild(headerRow);
+	});
+
+	const url="http://localhost:1234/data.json";
+	 
+	fetch(url)
+	.then(response => response.json())
+	.then(data => {
+		data.forEach((campaign, index) => {
+			const row = tableElement.insertRow(0);
+			const cells = Object.keys(campaign);
+			cells.forEach(cellData => {
+				const dataCell = document.createElement('td');
+				dataCell.innerHTML = campaign[cellData];
+				row.appendChild(dataCell);
+			});
+			tableElement.appendChild(row);
+		});
+	})
+
+	document.getElementById('tbl').appendChild(tableElement);
+	
+ }
+
  function displayjson()
 {
 	var arrHead = new Array();
@@ -46,7 +82,7 @@ pager.showPage(1);
         head.innerHTML = arrHead[h];
         row.appendChild(head);
 		dataTbl.appendChild(row);
-		dataTbl.setAttribute("border","1");
+		dataTbl.setAttribute("border","1");dataTbl.setAttribute('id', 'dataTbl');
 		tbl.appendChild(dataTbl);
     }
 		
