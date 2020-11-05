@@ -1,9 +1,12 @@
-//displayjson();
-displayTable()
+const tableElement = document.createElement('table');
+tableElement.setAttribute('id', 'table-element');
+let campaignData;
+displayTable();
  var pager = new Pager('dataTbl', 1);
 pager.init();
 pager.showPageNav('pager', 'pageNavPosition');
 pager.showPage(1);
+
  /*function displayjson()
  {
 	
@@ -30,12 +33,33 @@ pager.showPage(1);
 		
 	});  
  }*/
+
+
+
+
+function populateTable(data) {
+	data.forEach((campaign, index) => {
+		const row = tableElement.insertRow(0);
+		const checkBoxCell = document.createElement('td');
+		const checkbox = document.createElement('input');
+		checkbox.type = 'checkbox';
+		checkbox.setAttribute('id', index);
+		checkBoxCell.append(checkbox);
+		row.append(checkBoxCell);
+		const cells = Object.keys(campaign);
+		cells.forEach(cellData => {
+			const dataCell = document.createElement('td');
+			dataCell.innerHTML = campaign[cellData];
+			row.appendChild(dataCell);
+		});
+		tableElement.appendChild(row);
+	});
+}
+
  function displayTable() {
 	var arrHead = new Array();
-    arrHead = ['ID', 'Campaign Name', 'Type', 'Company'];
+    arrHead = ['', 'ID', 'Campaign Name', 'Type', 'Company'];
 
-	const tableElement = document.createElement('table');
-	tableElement.setAttribute('id', 'table-element');
 	const headerRow = tableElement.insertRow(-1);
 
 	arrHead.forEach(head => {
@@ -50,22 +74,16 @@ pager.showPage(1);
 	fetch(url)
 	.then(response => response.json())
 	.then(data => {
-		data.forEach((campaign, index) => {
-			const row = tableElement.insertRow(0);
-			const cells = Object.keys(campaign);
-			cells.forEach(cellData => {
-				const dataCell = document.createElement('td');
-				dataCell.innerHTML = campaign[cellData];
-				row.appendChild(dataCell);
-			});
-			tableElement.appendChild(row);
-		});
-	})
+		populateTable(data);
+		campaignData = data;
+	});
 
 	document.getElementById('tbl').appendChild(tableElement);
 	
  }
 
+
+ 
  function displayjson()
 {
 	var arrHead = new Array();
@@ -73,7 +91,9 @@ pager.showPage(1);
 
     //declaring variable with create method
     var dataTbl=document.createElement('table');
+	dataTbl.setAttribute('id', 'dataTbl');
     var row=document.createElement('tr');
+	const tbl = document.getElementById('tbl');
     
 	row = dataTbl.insertRow(-1);
 	for (var h = 0; h < arrHead.length; h++) 
@@ -82,8 +102,7 @@ pager.showPage(1);
         head.innerHTML = arrHead[h];
         row.appendChild(head);
 		dataTbl.appendChild(row);
-		dataTbl.setAttribute("border","1");dataTbl.setAttribute('id', 'dataTbl');
-		tbl.appendChild(dataTbl);
+		dataTbl.setAttribute("border","1");
     }
 		
 	let url="http://localhost:1234/data.json";
@@ -95,30 +114,28 @@ pager.showPage(1);
 		
 		var t=document.getElementById('dataTbl');
 		
-		for (var i = 0; data[i]!==null; i ++)
+		for (var i = 0; i < data.length; i ++)
 			{
 				row = dataTbl.insertRow(i-1);
 				
 				var j=0;
-				for(x in data[i])
-				{ 
-					var col=document.createElement('td');col = row.insertCell(j-1);j++;
-					col.innerHTML = data[i][x];row.appendChild(col);
-					
-					console.log(data[i][x]);
+				for(x in data[i]) { 
+					var col=document.createElement('td');
+					col = row.insertCell(j-1);j++;
+					col.innerHTML = data[i][x];
+					row.appendChild(col);
 				}
 				
 			
 				t.appendChild(row);
 				t.setAttribute("border","1");
-				tbl.appendChild(t);
-				
 			}
 					
    
 	});  
    
-   
+   tbl.appendChild(dataTbl);
+
 
 }
 
@@ -195,12 +212,14 @@ pagerHtml += '<span onclick="'+pagerName+'.next();" class="pg-normal"> Next »</
 	}
 
 }
- 
+document.getElementById('myInput').addEventListener('input', function(event) {
+  searchFunction(event.target.value);
+}); 
 function searchFunction(){
     var input, filter, found, table, tr, td, i, j;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
-    table = document.getElementById("dataTbl");
+    table = document.getElementById("table-element");
     tr = table.getElementsByTagName("tr");
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName("td");
@@ -216,6 +235,9 @@ function searchFunction(){
             tr[i].style.display = "none";
         }
     }
+
+
+	// mmodify campaignData here and use populateTable function.
 }
 function deleteRows(){
 
