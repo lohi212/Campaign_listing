@@ -3,7 +3,7 @@ displayjson();
 pager.init();
 pager.showPageNav('pager', 'pageNavPosition');
 pager.showPage(1);
- function displayjson()
+ /*function displayjson()
  {
 	
 	 let url="http://localhost:1234/data.json";
@@ -28,7 +28,64 @@ pager.showPage(1);
 		   
 		
 	});  
- }
+ }*/
+ 
+ function displayjson()
+{
+	var arrHead = new Array();
+    arrHead = ['ID', 'Campaign Name', 'Type', 'Company'];
+
+    //declaring variable with create method
+    var dataTbl=document.createElement('table');
+    var row=document.createElement('tr');
+    
+	row = dataTbl.insertRow(-1);
+	for (var h = 0; h < arrHead.length; h++) 
+	{
+        var head = document.createElement('th'); // the header object.
+        head.innerHTML = arrHead[h];
+        row.appendChild(head);
+		dataTbl.appendChild(row);
+		dataTbl.setAttribute("border","1");
+		tbl.appendChild(dataTbl);
+    }
+		
+	let url="http://localhost:1234/data.json";
+	 
+	fetch(url)
+	.then(response => response.json())
+	.then(data => {
+		var tablecontents = "";
+		
+		var t=document.getElementById('dataTbl');
+		
+		for (var i = 0; data[i]!==null; i ++)
+			{
+				row = dataTbl.insertRow(i-1);
+				
+				var j=0;
+				for(x in data[i])
+				{ 
+					var col=document.createElement('td');col = row.insertCell(j-1);j++;
+					col.innerHTML = data[i][x];row.appendChild(col);
+					
+					console.log(data[i][x]);
+				}
+				
+			
+				t.appendChild(row);
+				t.setAttribute("border","1");
+				tbl.appendChild(t);
+				
+			}
+					
+   
+	});  
+   
+   
+
+}
+
  function Pager(tableName, itemsPerPage) {
 	this.tableName = tableName;
 	this.itemsPerPage = itemsPerPage;
